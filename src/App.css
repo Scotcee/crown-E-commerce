@@ -1,0 +1,10 @@
+body {
+  font-family: "Open Sans", sans-serif;
+  padding: 20px 80px;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 18px;
+  color: #333;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+}

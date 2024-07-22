@@ -1,13 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/homepage/homepage.component';
-import HatsPage from './pages/hats/hats.component';
+import ShopPage from './pages/shop/shop.component';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/hats" element={<HatsPage />} />
+      <Route path="/shop" element={<ShopPage />} />
     </Routes>
   );
 }
