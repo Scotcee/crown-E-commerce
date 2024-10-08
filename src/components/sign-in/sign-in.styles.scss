@@ -1,9 +1,14 @@
 .sign-in {
-  width: 30vw;
+  width: 380px; // Consider changing this to a max-width for better responsiveness
   display: flex;
   flex-direction: column;
 
   .title {
     margin: 10px 0;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
   }
 }
