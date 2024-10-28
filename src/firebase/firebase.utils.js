@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const config = {
     apiKey: "AIzaSyCgjOFAWp_TlncthHhjIJ5ldKzsg9u0NqQ",
@@ -12,27 +12,51 @@ const config = {
     measurementId: "G-B2TJK3YKP0"
 };
 
-// Initialize Firebase
 const app = initializeApp(config);
-
-// Initialize Firestore and Auth
-const firestore = getFirestore(app);
 const auth = getAuth(app);
+const firestore = getFirestore(app);
 
-// Google Auth Provider
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
+// Create user profile document
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+    if (!userAuth) return;
+
+    const userRef = doc(firestore, `users/${userAuth.uid}`);
+    const snapshot = await getDoc(userRef);
+
+    if (!snapshot.exists()) {
+        const { displayName, email } = userAuth;
+
+        try {
+            await setDoc(userRef, {
+                displayName,
+                email,
+                createdAt: new Date(),
+                ...additionalData
+            });
+        } catch (error) {
+            console.error("Error creating user profile document:", error);
+        }
+    }
+    return userRef;
+};
+
+// Sign up with email and password function
+export const signUpWithEmailAndPassword = async (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
+};
 
 // Sign in with Google function
 export const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
     try {
         const result = await signInWithPopup(auth, provider);
-        return result; // Handle the result as needed
+        return result; // Handle result as needed
     } catch (error) {
         console.error("Error signing in with Google:", error);
-        // Optionally display an error message to the user
     }
 };
 
-// Export instances
-export { app, firestore, auth, provider };
+// Export necessary modules
+export { app, auth };
